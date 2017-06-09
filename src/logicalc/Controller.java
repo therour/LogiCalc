@@ -14,6 +14,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
 
 /**
  *
@@ -32,19 +33,25 @@ public class Controller implements Initializable {
         }
         if (op.equals(")")){
             while(true){
-                stack.push(stOperator.pop());
-                if (stack.peek().equals("(")){
-                    return;
-                }
+                String tmp = stOperator.pop();
+                if (tmp.equals("(")) return;
+                stack.push(tmp);
             }
         }
         int a = opPrior.get(op);
         int b = opPrior.get(stOperator.peek());
-        while (!stOperator.empty() && a < b ){
-            stack.push(stOperator.pop());
-            b = opPrior.get(stOperator.peek());
+        while (true) {
+            if (stOperator.empty()) {
+                stOperator.push(op);
+                return;
+            }
+            if (a < b){
+                stack.push(stOperator.pop());
+            } else {
+                stOperator.push(op);
+                return;
+            }
         }
-        stOperator.push(op);
     }
     private boolean isNumber(String x){
         try {
@@ -70,9 +77,6 @@ public class Controller implements Initializable {
         return tmp;
     }
 
-// Contoh : ( 1 > 2 ) & ( ~ 3 )
-// Stack  : 1 2 > (
-// StackOP: & 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         /* Operator priority low to high */
@@ -83,8 +87,20 @@ public class Controller implements Initializable {
 	opPrior.put("|", 5);
 	opPrior.put("~", 6);
         
-        String soal = "( 1 > 2 ) & ( ~ 3 )";
-        for (String x : soal.split(" ")){
+        
+    }
+    
+    /* FXML SECTION */
+    @FXML
+    private Label label;
+    
+    @FXML
+    private TextField soal;
+    
+    @FXML
+    private void handleButtonAction(ActionEvent event) {
+        String q = soal.getText();
+        for (String x : q.split(" ")){
             if (isNumber(x)){
                 stack.push(x);
             } else {
@@ -101,21 +117,10 @@ public class Controller implements Initializable {
         while (!stOperator.empty()){
             stack.push(stOperator.pop());
         }
+        String jawaban = "";
         while (!stack.empty()){
-            System.out.print(stack.pop() + " ");
+            jawaban += " " +  stack.pop();
         }
-    }
-    
-    /* FXML SECTION */
-    @FXML
-    private Label label;
-    
-    @FXML
-    private void handleButtonAction(ActionEvent event) {
-        System.out.println("You clicked me!");
-        label.setText("Hello World!");
-    }
-    
-    
-    
+        label.setText(jawaban);
+    }   
 }
