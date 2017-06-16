@@ -39,11 +39,11 @@ public class Tree
     public void setRight(Tree n){
 	this.right = n;
     }
-    public void print(){
-	if(this != null){
-            left.print();
-            System.out.print("" + this.data + " ");
-            right.print();
+    public static void print(Tree t){
+	if(t != null){
+            print(t.getLeft());
+            System.out.print("" + t.getData() + " ");
+            print(t.getRight());
 	}
     }
 }

@@ -27,7 +27,7 @@ public class Controller implements Initializable {
     private HashMap<String, Integer> opPrior = new HashMap<>();
     
     private void checkOp(String op){
-        if (stOperator.empty()){
+        if (stOperator.empty() || op.equals("(")){
             stOperator.push(op);
             return;
         }
@@ -39,13 +39,12 @@ public class Controller implements Initializable {
             }
         }
         int a = opPrior.get(op);
-        int b = opPrior.get(stOperator.peek());
         while (true) {
             if (stOperator.empty()) {
                 stOperator.push(op);
                 return;
             }
-            if (a < b){
+            if (a < opPrior.get(stOperator.peek())){
                 stack.push(stOperator.pop());
             } else {
                 stOperator.push(op);
@@ -63,17 +62,16 @@ public class Controller implements Initializable {
     }
     private Tree convertToTree(Stack<String> st){
         Tree tmp = new Tree(st.pop());
-        if (st.empty()){
-            return tmp;
-        } 
-        if (tmp.getData().equals("~")){
-            // satu anak
-            Tree right = new Tree(stack.pop());
-        } else if (!isNumber(tmp.getData())){
-            // dua anak
+        if (isNumber(st.peek())){
+            tmp.setRight(new Tree(st.pop()));
         } else {
-            // tanpa anak
+            tmp.setRight(convertToTree(st));
         }
+        if (isNumber(st.peek())){
+            tmp.setLeft(new Tree(st.pop()));
+        } else {
+            tmp.setLeft(convertToTree(st));
+        } 
         return tmp;
     }
 
@@ -106,14 +104,9 @@ public class Controller implements Initializable {
             } else {
                 checkOp(x);
             }
-//            System.out.print(stack.peek() + " ");
-//            try{
-//                System.out.println(stOperator.peek());
-//            } catch (EmptyStackException e){
-//                System.out.println("0");
-//            }
         }
         
+        Stack tmp = (Stack) stack.clone();
         while (!stOperator.empty()){
             stack.push(stOperator.pop());
         }
@@ -122,5 +115,9 @@ public class Controller implements Initializable {
             jawaban += " " +  stack.pop();
         }
         label.setText(jawaban);
+        
+        Tree baru = convertToTree(tmp);
+        System.out.println(baru.toString());
+        Tree.print(baru);
     }   
 }
