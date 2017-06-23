@@ -6,13 +6,14 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<AnchorPane id="AnchorPane" prefHeight="244.0" prefWidth="364.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="logicalc.Controller">
+<AnchorPane id="AnchorPane" prefHeight="244.0" prefWidth="510.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="logicalc.Controller">
     <children>
-        <Button fx:id="button" layoutX="88.0" layoutY="127.0" onAction="#handleButtonAction" text="Click Me!" />
+        <Button fx:id="button" defaultButton="true" layoutX="88.0" layoutY="127.0" onAction="#handleButtonAction" text="Click Me!" />
         <Label fx:id="label" layoutX="86.0" layoutY="102.0" minHeight="16" minWidth="69" />
       <TextField fx:id="soal" layoutX="86.0" layoutY="68.0" prefHeight="25.0" prefWidth="212.0" />
       <Label layoutX="86.0" layoutY="28.0" text="* setiap simbol dipisahkan dengan spasi" />
       <Label layoutX="86.0" layoutY="45.0" text="Contoh: ~ 1 &amp; 2 | 3 &gt; 4 &lt;&gt; 5" />
       <Label layoutX="47.0" layoutY="102.0" text="Stack" />
+      <Label fx:id="lbResult" layoutX="330.0" layoutY="28.0" />
     </children>
 </AnchorPane>

@@ -6,7 +6,6 @@
 package logicalc;
 
 import java.net.URL;
-import java.util.EmptyStackException;
 import java.util.HashMap;
 import java.util.ResourceBundle;
 import java.util.Stack;
@@ -62,6 +61,14 @@ public class Controller implements Initializable {
     }
     private Tree convertToTree(Stack<String> st){
         Tree tmp = new Tree(st.pop());
+        if ("~".equals(tmp.getData())){
+            if (isNumber(st.peek())){
+                tmp.setRight(new Tree(st.pop()));
+            } else {
+                tmp.setRight(convertToTree(st));
+            }
+            return tmp;
+        }
         if (isNumber(st.peek())){
             tmp.setRight(new Tree(st.pop()));
         } else {
@@ -90,15 +97,16 @@ public class Controller implements Initializable {
     
     /* FXML SECTION */
     @FXML
-    private Label label;
+    private Label label, lbResult;
     
     @FXML
     private TextField soal;
     
     @FXML
     private void handleButtonAction(ActionEvent event) {
-        String q = soal.getText();
-        for (String x : q.split(" ")){
+        String q = "(" + soal.getText() + ")";
+        for (String x : q.split("")){
+            if (" ".equals(x)) continue;
             if (isNumber(x)){
                 stack.push(x);
             } else {
@@ -117,7 +125,8 @@ public class Controller implements Initializable {
         label.setText(jawaban);
         
         Tree baru = convertToTree(tmp);
-        System.out.println(baru.toString());
-        Tree.print(baru);
+        lbResult.setText(BTreePrinter2.getVisual(baru));
+//        Tree.print(baru);
+        
     }   
 }
