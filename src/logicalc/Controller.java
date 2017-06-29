@@ -23,7 +23,7 @@ public class Controller implements Initializable {
     
     private Stack<String> stOperator = new Stack<>(); 
     private Stack<String> stack = new Stack<>();
-    private HashMap<String, Integer> opPrior = new HashMap<>();
+    private final HashMap<String, Integer> opPrior = new HashMap<>();
     
     private void checkOp(String op){
         if (stOperator.empty() || op.equals("(")){
@@ -51,30 +51,23 @@ public class Controller implements Initializable {
             }
         }
     }
-    private boolean isNumber(String x){
-        try {
-            int a = Integer.parseInt(x);
-            return true;
-        } catch (NumberFormatException e){
-            return false;
-        }
-    }
+    
     private Tree convertToTree(Stack<String> st){
         Tree tmp = new Tree(st.pop());
         if ("~".equals(tmp.getData())){
-            if (isNumber(st.peek())){
+            if (Logicalc.isNumber(st.peek())){
                 tmp.setRight(new Tree(st.pop()));
             } else {
                 tmp.setRight(convertToTree(st));
             }
             return tmp;
         }
-        if (isNumber(st.peek())){
+        if (Logicalc.isNumber(st.peek())){
             tmp.setRight(new Tree(st.pop()));
         } else {
             tmp.setRight(convertToTree(st));
         }
-        if (isNumber(st.peek())){
+        if (Logicalc.isNumber(st.peek())){
             tmp.setLeft(new Tree(st.pop()));
         } else {
             tmp.setLeft(convertToTree(st));
@@ -96,37 +89,47 @@ public class Controller implements Initializable {
     }
     
     /* FXML SECTION */
-    @FXML
-    private Label label, lbResult;
     
     @FXML
     private TextField soal;
     
     @FXML
     private void handleButtonAction(ActionEvent event) {
-        String q = "(" + soal.getText() + ")";
+        // print intro
+        System.out.println("===== Formula Processing =====");
+        System.out.println("");
+        // get input
+        String q = soal.getText();
+        
+        // convert string to stack
         for (String x : q.split("")){
             if (" ".equals(x)) continue;
-            if (isNumber(x)){
-                stack.push(x);
-            } else {
-                checkOp(x);
-            }
+            if (Logicalc.isNumber(x)) stack.push(x);
+            else checkOp(x);
         }
-        
-        Stack tmp = (Stack) stack.clone();
         while (!stOperator.empty()){
             stack.push(stOperator.pop());
         }
-        String jawaban = "";
-        while (!stack.empty()){
-            jawaban += " " +  stack.pop();
-        }
-        label.setText(jawaban);
         
-        Tree baru = convertToTree(tmp);
-        lbResult.setText(BTreePrinter2.getVisual(baru));
-//        Tree.print(baru);
+        // lihat bentuk stack
+        Stack tmp = (Stack) stack.clone();
+        String cekstack = "";
+        while (!tmp.empty())
+            cekstack += tmp.pop() + " ";
+        System.out.println("input :" + q);
+        System.out.println("Stack :");
+        System.out.println(cekstack);
+        System.out.println("top ---> bottom");
+        
+        // convert stack to Tree : tree
+        Tree tree = convertToTree(stack);
+        
+        // lihat bentuk Tree : tree
+        BTreePrinter.printNode(tree);
+        
+        // Cek Formula tree thd hukum ekuivalensi
+        System.out.println("Hukum Ekuivalensi yang dapat dilakukan");
+        Formula formula = new Formula(tree);
         
     }   
 }

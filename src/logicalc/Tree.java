@@ -15,10 +15,12 @@ public class Tree
     private String data;
     private Tree left;
     private Tree right;
+    private boolean isOperator;
     
     /* Constructor */
     public Tree(String x){
 	this.data = x;
+        this.isOperator = !Logicalc.isNumber(x);
 	this.left = null;
 	this.right = null;
     }
@@ -45,5 +47,8 @@ public class Tree
             System.out.print("" + t.getData() + " ");
             print(t.getRight());
 	}
+    }
+    public boolean isOperator(){
+        return this.isOperator;
     }
 }

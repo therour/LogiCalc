@@ -33,5 +33,12 @@ public class Logicalc extends Application {
     public static void main(String[] args) {
         launch(args);
     }
-    
+    public static boolean isNumber(String x){
+        try {
+            int a = Integer.parseInt(x);
+            return true;
+        } catch (NumberFormatException e){
+            return false;
+        }
+    }
 }

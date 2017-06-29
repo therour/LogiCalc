@@ -1,19 +1,28 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
-<?import java.util.*?>
-<?import javafx.scene.*?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
 
-<AnchorPane id="AnchorPane" prefHeight="244.0" prefWidth="510.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="logicalc.Controller">
+<AnchorPane id="AnchorPane" prefHeight="364.0" prefWidth="385.0" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="logicalc.Controller">
     <children>
         <Button fx:id="button" defaultButton="true" layoutX="88.0" layoutY="127.0" onAction="#handleButtonAction" text="Click Me!" />
-        <Label fx:id="label" layoutX="86.0" layoutY="102.0" minHeight="16" minWidth="69" />
       <TextField fx:id="soal" layoutX="86.0" layoutY="68.0" prefHeight="25.0" prefWidth="212.0" />
-      <Label layoutX="86.0" layoutY="28.0" text="* setiap simbol dipisahkan dengan spasi" />
-      <Label layoutX="86.0" layoutY="45.0" text="Contoh: ~ 1 &amp; 2 | 3 &gt; 4 &lt;&gt; 5" />
-      <Label layoutX="47.0" layoutY="102.0" text="Stack" />
-      <Label fx:id="lbResult" layoutX="330.0" layoutY="28.0" />
+      <Button fx:id="button1" defaultButton="true" layoutX="88.0" layoutY="170.0" onAction="#handleButtonAction" text="¬">
+         <font>
+            <Font name="System Bold" size="17.0" />
+         </font>
+      </Button>
+      <Button fx:id="button11" defaultButton="true" layoutX="135.0" layoutY="170.0" onAction="#handleButtonAction" text="∧">
+         <font>
+            <Font name="System Bold" size="17.0" />
+         </font>
+      </Button>
+      <Button fx:id="button111" defaultButton="true" layoutX="185.0" layoutY="170.0" onAction="#handleButtonAction" text="∨">
+         <font>
+            <Font name="System Bold" size="17.0" />
+         </font>
+      </Button>
     </children>
 </AnchorPane>
