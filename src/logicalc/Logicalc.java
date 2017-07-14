@@ -34,11 +34,24 @@ public class Logicalc extends Application {
         launch(args);
     }
     public static boolean isNumber(String x){
+        if (x.equals("T") || x.equals("F")) return true;
         try {
             int a = Integer.parseInt(x);
             return true;
         } catch (NumberFormatException e){
             return false;
         }
+    }
+    public static boolean TreeEquals(Tree a, Tree b){
+        if (a == null && b == null) return true;
+        if (a != null && b != null) {
+            if (a.isOperand() && b.isOperand())
+                return (TreeEquals(a.getLeft(),b.getLeft()) 
+                    && TreeEquals(a.getRight(), a.getLeft()));
+            return (a.getData().equals(b.getData()) 
+                    && TreeEquals(a.getLeft(),b.getLeft()) 
+                    && TreeEquals(a.getRight(), a.getLeft()));
+        }    
+        return false;
     }
 }
