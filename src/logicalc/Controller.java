@@ -13,6 +13,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Label;
+import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 
 /**
@@ -21,8 +22,8 @@ import javafx.scene.control.TextField;
  */
 public class Controller implements Initializable {
     
-    private Stack<String> stOperator = new Stack<>(); 
-    private Stack<String> stack = new Stack<>();
+    private final Stack<String> stOperator = new Stack<>(); 
+    private final Stack<String> stack = new Stack<>();
     private final HashMap<String, Integer> opPrior = new HashMap<>();
     
     private void checkOp(String op){
@@ -79,19 +80,31 @@ public class Controller implements Initializable {
     public void initialize(URL url, ResourceBundle rb) {
         /* Operator priority low to high */
 	opPrior.put("(", 1);
-	opPrior.put("<>", 2);
+	opPrior.put("=", 2);
 	opPrior.put(">", 3);
 	opPrior.put("&", 4);
 	opPrior.put("|", 5);
 	opPrior.put("~", 6);
         
-        
+        lbHint.setText(
+                "&\t \u2192 Konjungsi" + "\n"
+                + "|\t \u2192 Disjungsi" + "\n"
+                + ">\t \u2192 Implikasi" + "\n"
+                + "=\t \u2192 Biimplikasi" + "\n"
+                + "~\t \u2192 Negasi" + "\n"
+                + "T\t \u2192 True" + "\n"
+                + "F\t \u2192 False" + "\n" + "\n"
+                + "1,2,3 \u2192 Operand" + "\n"
+                + "Contoh : (1 > 2) & ~(2 | 3) = T | F"
+        );
     }
     
     /* FXML SECTION */
     
     @FXML
     private TextField soal;
+    @FXML private Label lbHint;
+    @FXML private TextArea taResult;
     
     @FXML
     private void handleButtonAction(ActionEvent event) {
@@ -131,5 +144,7 @@ public class Controller implements Initializable {
         System.out.println("Hukum Ekuivalensi yang dapat dilakukan");
         Formula formula = new Formula(tree);
         
+        //tampilkan checkFormula pada Text Area
+        taResult.setText(formula.getCheck());
     }   
 }

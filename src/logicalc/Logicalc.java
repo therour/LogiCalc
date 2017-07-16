@@ -47,10 +47,19 @@ public class Logicalc extends Application {
         if (a != null && b != null) {
             if (a.isOperand() && b.isOperand())
                 return (TreeEquals(a.getLeft(),b.getLeft()) 
-                    && TreeEquals(a.getRight(), a.getLeft()));
+                        && TreeEquals(a.getRight(), b.getRight()));
             return (a.getData().equals(b.getData()) 
                     && TreeEquals(a.getLeft(),b.getLeft()) 
-                    && TreeEquals(a.getRight(), a.getLeft()));
+                    && TreeEquals(a.getRight(), b.getRight()));
+        }    
+        return false;
+    }
+    public static boolean TreeCaseEquals(Tree a, Tree b){
+        if (a == null && b == null) return true;
+        if (a != null && b != null) {
+            return (a.getData().equals(b.getData()) 
+                    && TreeCaseEquals(a.getLeft(),b.getLeft()) 
+                    && TreeCaseEquals(a.getRight(), b.getRight()));
         }    
         return false;
     }
