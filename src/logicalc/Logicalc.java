@@ -17,6 +17,7 @@ import javafx.stage.Stage;
  */
 public class Logicalc extends Application {
     
+    private static int GlobalID;
     @Override
     public void start(Stage stage) throws Exception {
         Parent root = FXMLLoader.load(getClass().getResource("FXMLDocument.fxml"));
@@ -32,6 +33,15 @@ public class Logicalc extends Application {
      */
     public static void main(String[] args) {
         launch(args);
+    }
+    
+    public static void resetGlobalID() {
+        GlobalID = 0;
+    }
+    
+    public static int getGlobalID() {
+        GlobalID += 1;
+        return GlobalID;
     }
     public static boolean isNumber(String x){
         if (x.equals("T") || x.equals("F")) return true;

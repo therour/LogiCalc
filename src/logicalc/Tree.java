@@ -16,9 +16,11 @@ public class Tree
     private Tree left;
     private Tree right;
     private boolean isOperand;
+    private int id;
     
     /* Constructor */
     public Tree(String x){
+        this.id = Logicalc.getGlobalID();
 	this.data = x;
         this.isOperand = Logicalc.isNumber(x);
 	this.left = null;

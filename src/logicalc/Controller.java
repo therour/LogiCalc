@@ -108,6 +108,7 @@ public class Controller implements Initializable {
     
     @FXML
     private void handleButtonAction(ActionEvent event) {
+        Logicalc.resetGlobalID();
         // print intro
         System.out.println("===== Formula Processing =====");
         System.out.println("");
