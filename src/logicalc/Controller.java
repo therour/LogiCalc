@@ -147,5 +147,14 @@ public class Controller implements Initializable {
         
         //tampilkan checkFormula pada Text Area
         taResult.setText(formula.getCheck());
+        formula.getColleciton().forEach((x,y) -> {
+            if (!y.isEmpty()) {
+                System.out.println(x);
+                y.forEach((e) -> {
+                    System.out.print(e + ". ");
+                });
+                System.out.println("");               
+            }
+        });
     }   
 }

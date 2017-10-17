@@ -37,7 +37,7 @@ class BTreePrinter {
         List<Tree> newNodes = new ArrayList<Tree>();
         for (Tree node : nodes) {
             if (node != null) {
-                System.out.print(node.getData());
+                System.out.print(node.getId() + ". " + node.getData());
                 newNodes.add(node.getLeft());
                 newNodes.add(node.getRight());
             } else {

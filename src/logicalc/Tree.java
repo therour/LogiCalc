@@ -28,6 +28,9 @@ public class Tree
     }
     
     /* Methods */
+    public int getId(){
+        return this.id;
+    }
     public String getData(){
 	return this.data;
     }
