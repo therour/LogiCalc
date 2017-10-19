@@ -46,23 +46,26 @@ public class Formula {
         col.put("TautKontra", getTautKontra(this.root));
         return col;
     }
-    public HashMap<String, List<Integer>> getColleciton() {
+    public HashMap<String, List<Integer>> getCollection() {
         return this.collection;
     }
     public Tree getTree(int id) {
         return this.getTree(id, this.root);
     }
     public Tree getTree(int id, Tree pohon) {
-        if (pohon.getId() == id) {
-            return pohon;
-        } 
-        if (pohon.getLeft() != null) {
-            return getTree(id, pohon.getLeft());
-        } 
-        if (pohon.getRight() != null) {
-            return getTree(id, pohon.getRight());
+        if (pohon != null) {
+            if (pohon.getId() == id) {
+                return pohon;
+            } else {
+                Tree found = getTree(id,pohon.getLeft());
+                if (found == null) {
+                    found = getTree(id, pohon.getRight());
+                }
+                return found;
+            } 
+        } else {
+            return null;
         }
-        return null;
     }
     public List<Integer> getIdentity(Tree pohon) {
         List<Integer> list = new ArrayList<>();

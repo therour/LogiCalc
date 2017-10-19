@@ -11,8 +11,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.ResourceBundle;
 import java.util.Stack;
+import java.util.stream.Collectors;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -111,6 +113,7 @@ public class Controller implements Initializable {
     @FXML private Label lbHint;
     @FXML private TextArea taResult;
     @FXML private ComboBox<Integer> cbTreeId;
+    @FXML private ComboBox<String> cbRules;
     
     @FXML
     private void handleButtonAction(ActionEvent event) {
@@ -155,7 +158,7 @@ public class Controller implements Initializable {
         //tampilkan checkFormula pada Text Area
         taResult.textProperty().unbind();
         taResult.setText(BTreePrinter2.getVisual(tree));
-        formula.getColleciton().forEach((x,y) -> {
+        formula.getCollection().forEach((x,y) -> {
             if (!y.isEmpty()) {
                 System.out.println(x);
                 y.forEach((e) -> {
@@ -164,27 +167,49 @@ public class Controller implements Initializable {
                 System.out.println("");               
             }
         });
-        
-        // getIdtoCombobox
-        List<Integer> Ids = new ArrayList<>();
-        int now = Logicalc.getGlobalID();
-        for (int i = 1; i < now; i++) {
-            Ids.add(i);
-        }
-        cbTreeId.setItems(FXCollections.observableArrayList(Ids));
-        cbTreeId.valueProperty().addListener((obs, oldItem, newItem) -> {
-            taResult.textProperty().unbind();
-            if (newItem == null) {
-                taResult.setText("");
-            } else {
+        // getRulesToCombobox
+        List<String> rules = new ArrayList<>();
+        rules = formula.getCollection().entrySet().stream()
+                .filter(e -> !e.getValue().isEmpty())
+                .map(e -> e.getKey())
+                .collect(Collectors.toList());
+        cbRules.setItems(FXCollections.observableArrayList(rules));
+        cbRules.valueProperty().addListener((obs, oldItem, newItem) -> {
+            cbTreeId.getItems().clear();
+            ObservableList items = FXCollections.observableArrayList(formula.getCollection().get(newItem));
+            cbTreeId.setItems(items);
+            cbTreeId.valueProperty().addListener((ob, oldit, newit) -> {
+                taResult.textProperty().unbind();
                 taResult.textProperty().bind(
                         new SimpleStringProperty(
-                            BTreePrinter2.getVisual(
-                                formula.getTree(newItem)
-                            )
+                                BTreePrinter2.getVisual(
+                                        formula.getTree(newit)
+                                )
                         )
                 );
-            }
+            });
         });
+        // getIdtoCombobox
+//        List<Integer> Ids = new ArrayList<>();
+//        int now = Logicalc.getGlobalID();
+//        for (int i = 1; i < now; i++) {
+//            Ids.add(i);
+//        }
+//        cbTreeId.setItems(FXCollections.observableArrayList(Ids));
+//        cbTreeId.valueProperty().addListener((obs, oldItem, newItem) -> {
+//            taResult.textProperty().unbind();
+//            if (newItem == null) {
+//                taResult.setText("");
+//            } else {
+//                taResult.textProperty().bind(
+//                        new SimpleStringProperty(
+//                            BTreePrinter2.getVisual(
+//                                formula.getTree(newItem)
+//                            )
+//                        )
+//                );
+//                BTreePrinter.printNode(formula.getTree(newItem));
+//            }
+//        });
     }   
 }
