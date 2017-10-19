@@ -6,12 +6,17 @@
 package logicalc;
 
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.ResourceBundle;
 import java.util.Stack;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
@@ -105,6 +110,7 @@ public class Controller implements Initializable {
     private TextField soal;
     @FXML private Label lbHint;
     @FXML private TextArea taResult;
+    @FXML private ComboBox<Integer> cbTreeId;
     
     @FXML
     private void handleButtonAction(ActionEvent event) {
@@ -139,14 +145,16 @@ public class Controller implements Initializable {
         Tree tree = convertToTree(stack);
         
         // lihat bentuk Tree : tree
-        BTreePrinter.printNode(tree);
+//        BTreePrinter.printNode(tree);
+//        System.out.println(BTreePrinter2.getVisual(tree));
         
         // Cek Formula tree thd hukum ekuivalensi
         System.out.println("Hukum Ekuivalensi yang dapat dilakukan");
         Formula formula = new Formula(tree);
         
         //tampilkan checkFormula pada Text Area
-        taResult.setText(formula.getCheck());
+        taResult.textProperty().unbind();
+        taResult.setText(BTreePrinter2.getVisual(tree));
         formula.getColleciton().forEach((x,y) -> {
             if (!y.isEmpty()) {
                 System.out.println(x);
@@ -154,6 +162,28 @@ public class Controller implements Initializable {
                     System.out.print(e + ". ");
                 });
                 System.out.println("");               
+            }
+        });
+        
+        // getIdtoCombobox
+        List<Integer> Ids = new ArrayList<>();
+        int now = Logicalc.getGlobalID();
+        for (int i = 1; i < now; i++) {
+            Ids.add(i);
+        }
+        cbTreeId.setItems(FXCollections.observableArrayList(Ids));
+        cbTreeId.valueProperty().addListener((obs, oldItem, newItem) -> {
+            taResult.textProperty().unbind();
+            if (newItem == null) {
+                taResult.setText("");
+            } else {
+                taResult.textProperty().bind(
+                        new SimpleStringProperty(
+                            BTreePrinter2.getVisual(
+                                formula.getTree(newItem)
+                            )
+                        )
+                );
             }
         });
     }   

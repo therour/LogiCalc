@@ -29,9 +29,6 @@ public class Formula {
                 .reduce(q, String::concat);
         return q;
     }
-    public HashMap<String, List<Integer>> getColleciton() {
-        return this.collection;
-    }
     private HashMap<String, List<Integer>> makeCollection() {
         HashMap<String, List<Integer>> col = new HashMap<>();
         col.put("Identity", getIdentity(this.root));
@@ -48,6 +45,24 @@ public class Formula {
         col.put("Kontraposisi", getKontraposisi(this.root));
         col.put("TautKontra", getTautKontra(this.root));
         return col;
+    }
+    public HashMap<String, List<Integer>> getColleciton() {
+        return this.collection;
+    }
+    public Tree getTree(int id) {
+        return this.getTree(id, this.root);
+    }
+    public Tree getTree(int id, Tree pohon) {
+        if (pohon.getId() == id) {
+            return pohon;
+        } 
+        if (pohon.getLeft() != null) {
+            return getTree(id, pohon.getLeft());
+        } 
+        if (pohon.getRight() != null) {
+            return getTree(id, pohon.getRight());
+        }
+        return null;
     }
     public List<Integer> getIdentity(Tree pohon) {
         List<Integer> list = new ArrayList<>();
