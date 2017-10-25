@@ -24,8 +24,9 @@ public class Formula {
         String q = "";
         q = collection.entrySet()
                 .stream()
+                .filter(entry -> entry.getValue().isEmpty())
                 .map(
-                    (entry) -> (!entry.getValue().isEmpty()) ? entry.getKey() + " \u2192 true \n" : "")
+                    (entry) -> entry.getKey() + " \u2192 true \n")
                 .reduce(q, String::concat);
         return q;
     }
