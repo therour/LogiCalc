@@ -6,22 +6,23 @@
 package logicalc;
 
 import java.net.URL;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.ResourceBundle;
 import java.util.Stack;
 import java.util.stream.Collectors;
-import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.Label;
+import javafx.scene.control.Button;
+import javafx.scene.control.ListCell;
+import javafx.scene.control.ListView;
+import javafx.scene.control.RadioButton;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
+import javafx.scene.control.ToggleGroup;
 
 /**
  *
@@ -32,8 +33,11 @@ public class Controller implements Initializable {
     private final Stack<String> stOperator = new Stack<>(); 
     private final Stack<String> stack = new Stack<>();
     private final HashMap<String, Integer> opPrior = new HashMap<>();
+    private Formula formula;
+    private BTreePrinter2 printer;
     
-    private void checkOp(String op){
+    private void checkOp(String op)
+    {
         if (stOperator.empty() || op.equals("(")){
             stOperator.push(op);
             return;
@@ -60,7 +64,8 @@ public class Controller implements Initializable {
         }
     }
     
-    private Tree convertToTree(Stack<String> st){
+    private Tree convertToTree(Stack<String> st)
+    {
         Tree tmp = new Tree(st.pop());
         if ("~".equals(tmp.getData())){
             if (Logicalc.isNumber(st.peek())){
@@ -84,7 +89,8 @@ public class Controller implements Initializable {
     }
 
     @Override
-    public void initialize(URL url, ResourceBundle rb) {
+    public void initialize(URL url, ResourceBundle rb) 
+    {
         /* Operator priority low to high */
 	opPrior.put("(", 1);
 	opPrior.put("=", 2);
@@ -93,30 +99,26 @@ public class Controller implements Initializable {
 	opPrior.put("|", 5);
 	opPrior.put("~", 6);
         
-        lbHint.setText(
-                "&\t \u2192 Konjungsi" + "\n"
-                + "|\t \u2192 Disjungsi" + "\n"
-                + ">\t \u2192 Implikasi" + "\n"
-                + "=\t \u2192 Biimplikasi" + "\n"
-                + "~\t \u2192 Negasi" + "\n"
-                + "T\t \u2192 True" + "\n"
-                + "F\t \u2192 False" + "\n" + "\n"
-                + "1,2,3 \u2192 Operand" + "\n"
-                + "Contoh : (1 > 2) & ~(2 | 3) = T | F"
-        );
+        btnMainTree.setOnAction((e) -> {
+            taResult.setText(printer.getVisual());
+        });
     }
     
     /* FXML SECTION */
     
     @FXML
     private TextField soal;
-    @FXML private Label lbHint;
     @FXML private TextArea taResult;
-    @FXML private ComboBox<Integer> cbTreeId;
-    @FXML private ComboBox<String> cbRules;
+    @FXML private ListView<String> lvRules;
+    @FXML private ListView<Integer> lvRulesId;
+    @FXML private Button btnMainTree;
+    private ToggleGroup group = new ToggleGroup();
     
     @FXML
-    private void handleButtonAction(ActionEvent event) {
+    private void goAction(ActionEvent event) 
+    {
+        lvRules.getItems().clear();
+        lvRulesId.getItems().clear();
         Logicalc.resetGlobalID();
         // print intro
         System.out.println("===== Formula Processing =====");
@@ -147,69 +149,63 @@ public class Controller implements Initializable {
         // convert stack to Tree : tree
         Tree tree = convertToTree(stack);
         
-        // lihat bentuk Tree : tree
-//        BTreePrinter.printNode(tree);
-//        System.out.println(BTreePrinter2.getVisual(tree));
-        
         // Cek Formula tree thd hukum ekuivalensi
-        System.out.println("Hukum Ekuivalensi yang dapat dilakukan");
-        Formula formula = new Formula(tree);
+        formula = new Formula(tree);
+        printer = new BTreePrinter2(tree);
         
         //tampilkan checkFormula pada Text Area
-        taResult.textProperty().unbind();
-        taResult.setText(BTreePrinter2.getVisual(tree));
-        formula.getCollection().forEach((x,y) -> {
-            if (!y.isEmpty()) {
-                System.out.println(x);
-                y.forEach((e) -> {
-                    System.out.print(e + ". ");
-                });
-                System.out.println("");               
-            }
-        });
-        // getRulesToCombobox
-        List<String> rules = new ArrayList<>();
-        rules = formula.getCollection().entrySet().stream()
+        taResult.setText(printer.getVisual());
+        
+        // get Rules yang berlaku pada formula
+        List<String> rules = formula.getCollection().entrySet().stream()
                 .filter(e -> !e.getValue().isEmpty())
                 .map(e -> e.getKey())
                 .collect(Collectors.toList());
-        cbRules.setItems(FXCollections.observableArrayList(rules));
-        cbRules.valueProperty().addListener((obs, oldItem, newItem) -> {
-            cbTreeId.getItems().clear();
-            ObservableList items = FXCollections.observableArrayList(formula.getCollection().get(newItem));
-            cbTreeId.setItems(items);
-            cbTreeId.valueProperty().addListener((ob, oldit, newit) -> {
-                taResult.textProperty().unbind();
-                taResult.textProperty().bind(
-                        new SimpleStringProperty(
-                                BTreePrinter2.getVisual(
-                                        formula.getTree(newit)
-                                )
-                        )
-                );
-            });
+
+        // getRulesToListView
+        lvRules.setItems(FXCollections.observableArrayList(rules));
+        lvRules.setCellFactory(param -> new ListCell<String>(){
+            @Override public void updateItem(String obj, boolean empty) {
+                super.updateItem(obj, empty);
+                if (empty) {
+                    setText(null);
+                    setGraphic(null);
+                } else {
+                    RadioButton radio = new RadioButton(obj);
+                    radio.setToggleGroup(group);
+                    radio.setOnAction((e) -> updateLvRulesId(obj));
+                    setGraphic(radio);
+                }
+            }
         });
-        // getIdtoCombobox
-//        List<Integer> Ids = new ArrayList<>();
-//        int now = Logicalc.getGlobalID();
-//        for (int i = 1; i < now; i++) {
-//            Ids.add(i);
-//        }
-//        cbTreeId.setItems(FXCollections.observableArrayList(Ids));
-//        cbTreeId.valueProperty().addListener((obs, oldItem, newItem) -> {
-//            taResult.textProperty().unbind();
-//            if (newItem == null) {
-//                taResult.setText("");
-//            } else {
-//                taResult.textProperty().bind(
-//                        new SimpleStringProperty(
-//                            BTreePrinter2.getVisual(
-//                                formula.getTree(newItem)
-//                            )
-//                        )
-//                );
-//                BTreePrinter.printNode(formula.getTree(newItem));
-//            }
-//        });
-    }   
+    }
+    
+    @FXML private void showKeyboardAction(ActionEvent e) 
+    {
+        System.out.println("keyboard belum dibuat");
+    }
+    private void updateLvRulesId(String kappa) 
+    {
+        ToggleGroup groupId = new ToggleGroup();
+        ObservableList ruleIds = FXCollections.observableArrayList(formula.getCollection().get(kappa));
+        lvRulesId.setItems(ruleIds);
+        lvRulesId.setCellFactory(param -> new ListCell<Integer>(){
+            @Override
+            public void updateItem(Integer obj, boolean empty) {
+                super.updateItem(obj, empty);
+                if(empty) {
+                    setText(null);
+                    setGraphic(null);
+                } else {
+                    RadioButton radio = new RadioButton(obj.toString());
+                    radio.setToggleGroup(groupId);
+                    radio.setOnAction((e) -> {
+//                        taResult.setText(printer.getVisual(formula.getTree(obj)));
+                        taResult.selectRange(printer.getMap().get(obj)-2, printer.getMap().get(obj) + 1);
+                    });
+                    setGraphic(radio);
+                }
+            }
+        });
+    }
 }

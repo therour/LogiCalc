@@ -3,9 +3,12 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/C:/Users/NizomSidiq/Documents/NetBeansProjects/Logicalc/src/logicalc/Formula.java</file>
-            <file>file:/C:/Users/NizomSidiq/Documents/NetBeansProjects/Logicalc/src/logicalc/Controller.java</file>
-            <file>file:/C:/Users/NizomSidiq/Documents/NetBeansProjects/Logicalc/src/logicalc/Logicalc.java</file>
+            <file>file:/C:/Users/NizomSidiq/Documents/NetBeansProjects/LogiCalc/src/logicalc/Logicalc.java</file>
+            <file>file:/C:/Users/NizomSidiq/Documents/NetBeansProjects/LogiCalc/src/logicalc/FXMLDocument.fxml</file>
+            <file>file:/C:/Users/NizomSidiq/Documents/NetBeansProjects/LogiCalc/src/logicalc/Formula.java</file>
+            <file>file:/C:/Users/NizomSidiq/Documents/NetBeansProjects/LogiCalc/src/logicalc/BTreePrinter.java</file>
+            <file>file:/C:/Users/NizomSidiq/Documents/NetBeansProjects/LogiCalc/src/logicalc/Controller.java</file>
+            <file>file:/C:/Users/NizomSidiq/Documents/NetBeansProjects/LogiCalc/src/logicalc/Tree.java</file>
         </group>
     </open-files>
 </project-private>
