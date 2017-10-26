@@ -25,8 +25,18 @@ class BTreePrinter2 {
     public BTreePrinter2(Tree root) {
         this.root = root;
         int maxLevel = maxLevel(root);
-        this.printed = printNodeInternal(Collections.singletonList(root), 1, maxLevel);
+        this.printed = ubahSimbol(printNodeInternal(Collections.singletonList(root), 1, maxLevel));
         this.tmp = 0;
+        
+    }
+    
+    private String ubahSimbol(String a) {
+        a = a.replace('>', '\u2192');
+        a = a.replace('&', '\u2227');
+        a = a.replace('|', '\u2228');
+        a = a.replace('~', '\u00ac');
+        a = a.replace('=', '\u2194');
+        return a;     
     }
     public String getVisual() {
         return this.printed; 

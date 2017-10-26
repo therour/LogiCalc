@@ -17,9 +17,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
-import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
-import javafx.scene.control.RadioButton;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleGroup;
@@ -102,6 +100,18 @@ public class Controller implements Initializable {
         btnMainTree.setOnAction((e) -> {
             taResult.setText(printer.getVisual());
         });
+        
+        lvRules.getSelectionModel().selectedItemProperty().addListener((ob, o, n) -> {
+            lvRulesId.getSelectionModel().clearSelection();
+            updateLvRulesId(n);
+        });
+        
+        lvRulesId.getSelectionModel().selectedItemProperty().addListener((ob, o, n) -> {
+            if (n != null) {
+                int selected = printer.getMap().get(n);
+                taResult.selectRange(selected -2, selected + 1);
+            }
+        });
     }
     
     /* FXML SECTION */
@@ -164,20 +174,6 @@ public class Controller implements Initializable {
 
         // getRulesToListView
         lvRules.setItems(FXCollections.observableArrayList(rules));
-        lvRules.setCellFactory(param -> new ListCell<String>(){
-            @Override public void updateItem(String obj, boolean empty) {
-                super.updateItem(obj, empty);
-                if (empty) {
-                    setText(null);
-                    setGraphic(null);
-                } else {
-                    RadioButton radio = new RadioButton(obj);
-                    radio.setToggleGroup(group);
-                    radio.setOnAction((e) -> updateLvRulesId(obj));
-                    setGraphic(radio);
-                }
-            }
-        });
     }
     
     @FXML private void showKeyboardAction(ActionEvent e) 
@@ -189,23 +185,5 @@ public class Controller implements Initializable {
         ToggleGroup groupId = new ToggleGroup();
         ObservableList ruleIds = FXCollections.observableArrayList(formula.getCollection().get(kappa));
         lvRulesId.setItems(ruleIds);
-        lvRulesId.setCellFactory(param -> new ListCell<Integer>(){
-            @Override
-            public void updateItem(Integer obj, boolean empty) {
-                super.updateItem(obj, empty);
-                if(empty) {
-                    setText(null);
-                    setGraphic(null);
-                } else {
-                    RadioButton radio = new RadioButton(obj.toString());
-                    radio.setToggleGroup(groupId);
-                    radio.setOnAction((e) -> {
-//                        taResult.setText(printer.getVisual(formula.getTree(obj)));
-                        taResult.selectRange(printer.getMap().get(obj)-2, printer.getMap().get(obj) + 1);
-                    });
-                    setGraphic(radio);
-                }
-            }
-        });
     }
 }

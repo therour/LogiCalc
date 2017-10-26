@@ -56,4 +56,24 @@ public class Tree
     public boolean isOperand(){
         return this.isOperand;
     }
+    public String treeToString() {
+        return this.treeToString(this);
+    }
+    public String treeToString(Tree pohon){
+        String str = "";
+        if(pohon != null){
+            str = pohon.getData();
+            if (pohon.getLeft() != null) {
+                str = "(" + treeToString(pohon.getLeft()) + str; 
+            }
+            if (pohon.getRight() != null) {
+                if (pohon.getRight().getData().equals("~")) {
+                    str += "(" + treeToString(pohon.getRight()) + ")";
+                } else {
+                    str += treeToString(pohon.getRight()) + ")";
+                }
+            }
+        }
+        return str;
+    }
 }
