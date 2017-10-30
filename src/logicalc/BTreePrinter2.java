@@ -18,14 +18,11 @@ import java.util.List;
 class BTreePrinter2 {
     private final HashMap<Integer, Integer> titik = new HashMap<>();
     private final Tree root;
-    private String printed;
     public HashMap<Integer, Integer> getMap() {
         return this.titik;
     }
     public BTreePrinter2(Tree root) {
         this.root = root;
-        int maxLevel = maxLevel(root);
-        this.printed = ubahSimbol(printNodeInternal(Collections.singletonList(root), 1, maxLevel));
         this.tmp = 0;
         
     }
@@ -39,9 +36,10 @@ class BTreePrinter2 {
         return a;     
     }
     public String getVisual() {
-        return this.printed; 
+        return ubahSimbol(getVisual(this.root)); 
     }
     public String getVisual(Tree root){
+        this.tmp = 0;
         int maxLevel = maxLevel(root);
         return printNodeInternal(Collections.singletonList(root), 1, maxLevel);
 

@@ -249,4 +249,10 @@ public class Formula {
     public List<Integer> getKontraposisi(Tree pohon) {
         return getImplikasi(pohon);
     }
+    public void execKomutatif(int id) {
+        Tree a = getTree(id);
+        final Tree tmp = a.getLeft();
+        a.setLeft(a.getRight());
+        a.setRight(tmp);
+    }
 }

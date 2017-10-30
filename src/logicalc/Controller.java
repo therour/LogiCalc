@@ -5,6 +5,7 @@
  */
 package logicalc;
 
+import java.lang.reflect.InvocationTargetException;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.List;
@@ -180,8 +181,13 @@ public class Controller implements Initializable {
     {
         System.out.println("keyboard belum dibuat");
     }
-    @FXML private void ekuivalensiAction(ActionEvent e)
+    @FXML private void ekuivalensiAction(ActionEvent e) throws NoSuchMethodException, IllegalAccessException, IllegalArgumentException, InvocationTargetException
     {
-        
+        String rule = lvRules.getSelectionModel().getSelectedItem();
+        int id = lvRulesId.getSelectionModel().getSelectedItem();
+        if (rule.equals("Komutatif")) {
+            formula.execKomutatif(id);
+        }
+        taResult.setText(printer.getVisual());
     }
 }
