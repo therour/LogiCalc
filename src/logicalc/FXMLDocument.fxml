@@ -26,5 +26,6 @@
       <Button fx:id="btnMainTree" layoutX="202.0" layoutY="159.0" prefHeight="25.0" prefWidth="77.0" text="Main Tree" />
       <Button fx:id="btnKeyboard" layoutX="44.0" layoutY="110.0" mnemonicParsing="false" onAction="#showKeyboardAction" text="Keyboard" />
       <Text fill="#575656" layoutX="44.0" layoutY="176.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Hukum Ekuivalensi" />
+      <Button layoutX="202.0" layoutY="384.0" mnemonicParsing="false" onAction="#ekuivalensiAction" prefHeight="45.0" prefWidth="77.0" text="Action" />
     </children>
 </AnchorPane>
