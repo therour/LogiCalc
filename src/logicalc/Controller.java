@@ -103,7 +103,8 @@ public class Controller implements Initializable {
         
         lvRules.getSelectionModel().selectedItemProperty().addListener((ob, o, n) -> {
             lvRulesId.getSelectionModel().clearSelection();
-            updateLvRulesId(n);
+            ObservableList ruleIds = FXCollections.observableArrayList(formula.getCollection().get(n));
+            lvRulesId.setItems(ruleIds);
         });
         
         lvRulesId.getSelectionModel().selectedItemProperty().addListener((ob, o, n) -> {
@@ -171,7 +172,6 @@ public class Controller implements Initializable {
                 .filter(e -> !e.getValue().isEmpty())
                 .map(e -> e.getKey())
                 .collect(Collectors.toList());
-
         // getRulesToListView
         lvRules.setItems(FXCollections.observableArrayList(rules));
     }
@@ -180,10 +180,8 @@ public class Controller implements Initializable {
     {
         System.out.println("keyboard belum dibuat");
     }
-    private void updateLvRulesId(String kappa) 
+    @FXML private void ekuivalensiAction(ActionEvent e)
     {
-        ToggleGroup groupId = new ToggleGroup();
-        ObservableList ruleIds = FXCollections.observableArrayList(formula.getCollection().get(kappa));
-        lvRulesId.setItems(ruleIds);
+        
     }
 }
