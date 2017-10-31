@@ -48,7 +48,7 @@ public class Formula {
         return col;
     }
     public HashMap<String, List<Integer>> getCollection() {
-        return this.collection;
+        return this.makeCollection();
     }
     public Tree getTree(int id) {
         return this.getTree(id, this.root);
@@ -249,10 +249,42 @@ public class Formula {
     public List<Integer> getKontraposisi(Tree pohon) {
         return getImplikasi(pohon);
     }
-    public void execKomutatif(int id) {
-        Tree a = getTree(id);
-        final Tree tmp = a.getLeft();
-        a.setLeft(a.getRight());
+    public void execKomutatif(Tree pohon) {
+        // Tree a = getTree(id);
+        final Tree tmp = pohon.getLeft();
+        pohon.setLeft(pohon.getRight());
+        pohon.setRight(tmp);
+    }
+    public void execIdentity(Tree pohon) {}
+    public void execAbsorption(Tree pohon) {}
+    public void execAssosiatif(Tree pohon) {
+        if (pohon.getData().equals(pohon.getRight().getData())) {
+            execKomutatif(pohon.getRight());
+            execKomutatif(pohon);
+            final Tree tmp = pohon.getRight();
+            pohon.setRight(pohon.getLeft().getLeft());
+            pohon.getLeft().setLeft(tmp);
+        } else {
+            execKomutatif(pohon.getLeft());
+            execKomutatif(pohon);
+            final Tree tmp = pohon.getLeft();
+            pohon.setLeft(pohon.getRight().getRight());
+            pohon.getRight().setRight(tmp);
+            
+        }
+    }
+    public void execBiimplikasi(Tree pohon) {}
+    public void execDNegasi(Tree pohon) {
+        // MASIH SALAH
+        final Tree tmp = pohon.getRight().getRight();
+        Tree a = getTree(pohon.getId()-1);
         a.setRight(tmp);
     }
+    public void execDeMo(Tree pohon) {}
+    public void execDistributif(Tree pohon) {}
+    public void execEksportasi(Tree pohon) {}
+    public void execImplikasi(Tree pohon) {}
+    public void execKontraposisi(Tree pohon) {}
+    public void execTautKontra(Tree pohon) {}
+
 }

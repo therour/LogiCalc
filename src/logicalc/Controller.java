@@ -106,6 +106,7 @@ public class Controller implements Initializable {
             lvRulesId.getSelectionModel().clearSelection();
             ObservableList ruleIds = FXCollections.observableArrayList(formula.getCollection().get(n));
             lvRulesId.setItems(ruleIds);
+            lvRulesId.getSelectionModel().selectFirst();
         });
         
         lvRulesId.getSelectionModel().selectedItemProperty().addListener((ob, o, n) -> {
@@ -185,9 +186,15 @@ public class Controller implements Initializable {
     {
         String rule = lvRules.getSelectionModel().getSelectedItem();
         int id = lvRulesId.getSelectionModel().getSelectedItem();
-        if (rule.equals("Komutatif")) {
-            formula.execKomutatif(id);
-        }
+        System.out.println("exec" + rule);
+        java.lang.reflect.Method s = formula.getClass().getMethod("exec" + rule, Tree.class);
+        s.invoke(formula, formula.getTree(id));
         taResult.setText(printer.getVisual());
+        List<String> rules = formula.getCollection().entrySet().stream()
+                .filter(ev -> !ev.getValue().isEmpty())
+                .map(ev -> ev.getKey())
+                .collect(Collectors.toList());
+        if (!lvRules.getItems().equals(FXCollections.observableArrayList(rules)))
+        lvRules.setItems(FXCollections.observableArrayList(rules));
     }
 }
