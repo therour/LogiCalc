@@ -20,7 +20,6 @@ public class Tree
     
     /* Constructor */
     public Tree(String x){
-        this.id = Logicalc.getGlobalID();
 	this.data = x;
         this.isOperand = Logicalc.isNumber(x);
 	this.left = null;
@@ -30,6 +29,9 @@ public class Tree
     /* Methods */
     public int getId(){
         return this.id;
+    }
+    public void setId(int id) {
+        this.id = id;
     }
     public String getData(){
 	return this.data;
@@ -53,6 +55,13 @@ public class Tree
             print(t.getRight());
 	}
     }
+    protected void changeTree(Tree pohon) {
+        this.data = pohon.getData();
+        this.setLeft(pohon.getLeft());
+        this.setRight(pohon.getRight());
+        this.id = pohon.getId();
+    }
+    
     public boolean isOperand(){
         return this.isOperand;
     }

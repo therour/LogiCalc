@@ -39,6 +39,7 @@ class BTreePrinter2 {
         return ubahSimbol(getVisual(this.root)); 
     }
     public String getVisual(Tree root){
+        Logicalc.resetGlobalID();
         this.tmp = 0;
         int maxLevel = maxLevel(root);
         return printNodeInternal(Collections.singletonList(root), 1, maxLevel);
@@ -60,6 +61,7 @@ class BTreePrinter2 {
             if (node != null) {
                 System.out.print(node.getData());
                 result += node.getData();
+                node.setId(Logicalc.getGlobalID());
                 titik.put(node.getId(), this.tmp + result.length());
                 System.out.println("" + titik.get(node.getId()));
                 newNodes.add(node.getLeft());

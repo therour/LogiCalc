@@ -163,8 +163,9 @@ public class Controller implements Initializable {
         Tree tree = convertToTree(stack);
         
         // Cek Formula tree thd hukum ekuivalensi
-        formula = new Formula(tree);
         printer = new BTreePrinter2(tree);
+        printer.getVisual();
+        formula = new Formula(tree);
         
         //tampilkan checkFormula pada Text Area
         taResult.setText(printer.getVisual());
@@ -194,7 +195,12 @@ public class Controller implements Initializable {
                 .filter(ev -> !ev.getValue().isEmpty())
                 .map(ev -> ev.getKey())
                 .collect(Collectors.toList());
-        if (!lvRules.getItems().equals(FXCollections.observableArrayList(rules)))
-        lvRules.setItems(FXCollections.observableArrayList(rules));
+        if (rules.isEmpty()) {
+            lvRules.getItems().clear();
+            lvRulesId.getItems().clear();
+        } else if (!lvRules.getItems().equals(FXCollections.observableArrayList(rules))) {
+            lvRules.setItems(FXCollections.observableArrayList(rules));
+        }
+        //soal.setText(formula.getTree(1).treeToString().substring(1, formula.getTree(1).treeToString().length() -1));
     }
 }

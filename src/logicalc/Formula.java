@@ -250,13 +250,43 @@ public class Formula {
         return getImplikasi(pohon);
     }
     public void execKomutatif(Tree pohon) {
-        // Tree a = getTree(id);
         final Tree tmp = pohon.getLeft();
         pohon.setLeft(pohon.getRight());
         pohon.setRight(tmp);
     }
-    public void execIdentity(Tree pohon) {}
-    public void execAbsorption(Tree pohon) {}
+    public void execIdentity(Tree pohon) {  
+        if (pohon.getData().equals("&")) {
+            if (pohon.getLeft().getData().equals("T"))
+                pohon.changeTree(pohon.getRight());
+            else if (pohon.getLeft().getData().equals("F"))
+                pohon.changeTree(pohon.getLeft());
+            else if (pohon.getRight().getData().equals("T"))
+                pohon.changeTree(pohon.getLeft());
+            else if (pohon.getRight().getData().equals("F"))
+                pohon.changeTree(pohon.getRight());
+        }
+        if (pohon.getData().equals("|")) {
+            if (pohon.getLeft().getData().equals("T"))
+                pohon.changeTree(pohon.getLeft());
+            else if (pohon.getLeft().getData().equals("F"))
+                pohon.changeTree(pohon.getRight());
+            else if (pohon.getRight().getData().equals("T"))
+                pohon.changeTree(pohon.getRight());
+            else if (pohon.getRight().getData().equals("F"))
+                pohon.changeTree(pohon.getLeft());
+        }
+    }
+    public void execAbsorption(Tree pohon) {
+        // hanya berlaku di A & (A | B) atau di (A | ( ~A & B)
+        // belum berlaku jika ada elemen yang dikomutatifkan
+        if (pohon.getRight().getLeft().getData().equals("~")) {
+            final Tree tmp = pohon.getRight().getRight();
+            pohon.setRight(tmp);
+        } else {
+            final Tree tmp = pohon.getLeft();
+            pohon.changeTree(tmp);
+        }
+    }
     public void execAssosiatif(Tree pohon) {
         if (pohon.getData().equals(pohon.getRight().getData())) {
             execKomutatif(pohon.getRight());
@@ -273,18 +303,94 @@ public class Formula {
             
         }
     }
-    public void execBiimplikasi(Tree pohon) {}
-    public void execDNegasi(Tree pohon) {
-        // MASIH SALAH
-        final Tree tmp = pohon.getRight().getRight();
-        Tree a = getTree(pohon.getId()-1);
-        a.setRight(tmp);
+    public void execBiimplikasi(Tree pohon) {
+        Tree left = new Tree(">");
+        left.setLeft(pohon.getLeft());
+        left.setRight(pohon.getRight());
+        Tree right = new Tree(">");
+        right.setLeft(pohon.getRight());
+        right.setRight(pohon.getLeft());
+        Tree head = new Tree("&");
+        head.setLeft(left);
+        head.setRight(right);
+        pohon.changeTree(head);
     }
-    public void execDeMo(Tree pohon) {}
-    public void execDistributif(Tree pohon) {}
-    public void execEksportasi(Tree pohon) {}
-    public void execImplikasi(Tree pohon) {}
-    public void execKontraposisi(Tree pohon) {}
-    public void execTautKontra(Tree pohon) {}
-
+    public void execDNegasi(Tree pohon) {
+        final Tree tmp = pohon.getRight().getRight();
+        pohon.changeTree(tmp);
+    }
+    public void execDeMo(Tree pohon) {
+        Tree head = new Tree(pohon.getRight().getData().equals("&") ? "|" : "&");
+        
+        Tree left = new Tree("~");
+        left.setRight(pohon.getRight().getLeft());
+             
+        Tree right = new Tree("~");
+        right.setRight(pohon.getRight().getRight());
+        
+        head.setLeft(left);
+        head.setRight(right);
+        pohon.changeTree(head);
+    }
+    public void execDistributif(Tree pohon) {
+        // hanya berlaku di 1 & ( 2 | 3 ) bukan (2 | 3) & 1
+        // atau di 1 | ( 2 & 3 ) bukan (2 & 3) | 1
+        // progress untuk proses sebaliknya : (1 | 2) & (1 | 3)
+        if (pohon.getData().equals("&")) {
+            Tree a = new Tree("&");
+            a.setLeft(pohon.getLeft());
+            a.setRight(pohon.getRight().getLeft());
+            Tree b = new Tree("&");
+            b.setLeft(pohon.getLeft());
+            b.setRight(pohon.getRight().getRight());
+//            Tree tmp = new Tree("|");
+            pohon.changeTree(new Tree("|"));
+            pohon.setLeft(a);
+            pohon.setRight(b);
+            
+        } else
+        if (pohon.getData().equals("|")) {
+            Tree a = new Tree("|");
+            a.setLeft(pohon.getLeft());
+            a.setRight(pohon.getRight().getLeft());
+            Tree b = new Tree("|");
+            b.setLeft(pohon.getLeft());
+            b.setRight(pohon.getRight().getRight());
+            pohon.changeTree(new Tree("&"));
+            pohon.setLeft(a);
+            pohon.setRight(b);
+        }
+    }
+    public void execEksportasi(Tree pohon) {
+        final Tree a = pohon.getLeft().getLeft();
+        final Tree b = pohon.getLeft().getRight();
+        final Tree c = pohon.getRight();
+        Tree right = new Tree(">");
+        right.setLeft(b);
+        right.setRight(c);
+        pohon.setLeft(a);
+        pohon.setRight(right);
+    }
+    public void execImplikasi(Tree pohon) {
+        Tree head = new Tree("|");
+        head.setLeft(new Tree("~"));
+        head.getLeft().setRight(pohon.getLeft());
+        head.setRight(pohon.getRight());
+        pohon.changeTree(head);
+    }
+    public void execKontraposisi(Tree pohon) {
+        final Tree left = pohon.getLeft();
+        final Tree right = pohon.getRight();
+        pohon.setLeft(new Tree("~"));
+        pohon.setRight(new Tree("~"));
+        pohon.getLeft().setRight(right);
+        pohon.getRight().setRight(left);
+    }
+    public void execTautKontra(Tree pohon) {
+        pohon.changeTree(pohon.getData().equals("&") ? new Tree("F") : new Tree("T"));
+    }
+    public void execIdempotensi(Tree pohon) {
+        final Tree tmp = pohon.getRight();
+        pohon.changeTree(tmp);
+    }
 }
